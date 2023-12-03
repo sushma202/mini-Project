@@ -1,0 +1,93 @@
+!pip install pytube
+
+
+! pip install pytube -q
+
+from pytube import YouTube
+
+#VIDEO_URL = "https://youtu.be/-pHOhJJjJdE?si=Guo19OAHR9-GjYhG"
+
+VIDEO_URL = 'https://youtu.be/-pHOhJJjJdE?si=Guo19OAHR9-GjYhG'
+
+yt = YouTube(VIDEO_URL)
+
+Download the audio from the YouTube video
+
+yt = YouTube(VIDEO_URL)
+audio_streams = yt.streams.filter(only_audio=True)
+
+! ffmpeg -i audio.mp4 -acodec pcm_s16le -ar 16000 audio.wav
+
+Choose a specific audio stream (e.g., first one)
+
+audio = audio_streams.first()
+
+
+# Download the audio file
+audio.download(filename='audio.mp4')
+
+English ASR with HuggingSound
+
+!pip install huggingsound -q
+
+from huggingsound import SpeechRecognitionModel
+
+import torch
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
+device
+
+model = SpeechRecognitionModel("jonatasgrosman/wav2vec2-large-xlsr-53-english", device = device)
+
+Audio Chunking
+
+import librosa
+
+input_file = '/content/audio.wav'
+
+print(librosa.get_samplerate(input_file))
+
+# Stream over 30 seconds chunks rather than load the full file
+stream = librosa.stream(
+    input_file,
+    block_length=30,
+    frame_length=16000,
+    hop_length=16000
+)
+
+import soundfile as sf
+
+for i,speech in enumerate(stream):
+  sf.write(f'{i}.wav', speech, 16000)
+
+i
+
+Audio Transcription / ASR / Speech to Text
+
+audio_path =[]
+for a in range(i+1):
+  audio_path.append(f'/content/{a}.wav')
+
+audio_path
+
+transcriptions = model.transcribe(audio_path)
+
+full_transcript = ' '
+
+for item in transcriptions:
+  full_transcript += ''.join(item['transcription'])
+
+len(full_transcript)
+
+Text Summarization
+
+from transformers import pipeline
+
+summarization = pipeline('summarization')
+
+summarized_text = summarization(full_transcript)
+
+summarized_text[0]['summary_text']
+
+s=len(str(summarized_text))
+print(s)
