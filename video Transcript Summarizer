@@ -1,49 +1,119 @@
 !pip install pytube
 
+     
+Collecting pytube
+  Downloading pytube-15.0.0-py3-none-any.whl (57 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 57.6/57.6 kB 2.0 MB/s eta 0:00:00
+Installing collected packages: pytube
+Successfully installed pytube-15.0.0
 
 ! pip install pytube -q
+     
 
 from pytube import YouTube
+     
 
 #VIDEO_URL = "https://youtu.be/-pHOhJJjJdE?si=Guo19OAHR9-GjYhG"
+     
 
 VIDEO_URL = 'https://youtu.be/-pHOhJJjJdE?si=Guo19OAHR9-GjYhG'
+     
 
 yt = YouTube(VIDEO_URL)
-
+     
 Download the audio from the YouTube video
+
 
 yt = YouTube(VIDEO_URL)
 audio_streams = yt.streams.filter(only_audio=True)
+     
 
 ! ffmpeg -i audio.mp4 -acodec pcm_s16le -ar 16000 audio.wav
-
+     
+ffmpeg version 4.4.2-0ubuntu0.22.04.1 Copyright (c) 2000-2021 the FFmpeg developers
+  built with gcc 11 (Ubuntu 11.2.0-19ubuntu1)
+  configuration: --prefix=/usr --extra-version=0ubuntu0.22.04.1 --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 --enable-gpl --disable-stripping --enable-gnutls --enable-ladspa --enable-libaom --enable-libass --enable-libbluray --enable-libbs2b --enable-libcaca --enable-libcdio --enable-libcodec2 --enable-libdav1d --enable-libflite --enable-libfontconfig --enable-libfreetype --enable-libfribidi --enable-libgme --enable-libgsm --enable-libjack --enable-libmp3lame --enable-libmysofa --enable-libopenjpeg --enable-libopenmpt --enable-libopus --enable-libpulse --enable-librabbitmq --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libssh --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx265 --enable-libxml2 --enable-libxvid --enable-libzimg --enable-libzmq --enable-libzvbi --enable-lv2 --enable-omx --enable-openal --enable-opencl --enable-opengl --enable-sdl2 --enable-pocketsphinx --enable-librsvg --enable-libmfx --enable-libdc1394 --enable-libdrm --enable-libiec61883 --enable-chromaprint --enable-frei0r --enable-libx264 --enable-shared
+  libavutil      56. 70.100 / 56. 70.100
+  libavcodec     58.134.100 / 58.134.100
+  libavformat    58. 76.100 / 58. 76.100
+  libavdevice    58. 13.100 / 58. 13.100
+  libavfilter     7.110.100 /  7.110.100
+  libswscale      5.  9.100 /  5.  9.100
+  libswresample   3.  9.100 /  3.  9.100
+  libpostproc    55.  9.100 / 55.  9.100
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'audio.mp4':
+  Metadata:
+    major_brand     : dash
+    minor_version   : 0
+    compatible_brands: iso6mp41
+    creation_time   : 2023-11-21T10:40:33.000000Z
+  Duration: 00:03:56.89, start: 0.000000, bitrate: 48 kb/s
+  Stream #0:0(eng): Audio: aac (HE-AAC) (mp4a / 0x6134706D), 44100 Hz, stereo, fltp, 2 kb/s (default)
+    Metadata:
+      creation_time   : 2023-11-21T10:40:33.000000Z
+      handler_name    : ISO Media file produced by Google Inc.
+      vendor_id       : [0][0][0][0]
+Stream mapping:
+  Stream #0:0 -> #0:0 (aac (native) -> pcm_s16le (native))
+Press [q] to stop, [?] for help
+Output #0, wav, to 'audio.wav':
+  Metadata:
+    major_brand     : dash
+    minor_version   : 0
+    compatible_brands: iso6mp41
+    ISFT            : Lavf58.76.100
+  Stream #0:0(eng): Audio: pcm_s16le ([1][0][0][0] / 0x0001), 16000 Hz, stereo, s16, 512 kb/s (default)
+    Metadata:
+      creation_time   : 2023-11-21T10:40:33.000000Z
+      handler_name    : ISO Media file produced by Google Inc.
+      vendor_id       : [0][0][0][0]
+      encoder         : Lavc58.134.100 pcm_s16le
+size=   14806kB time=00:03:56.88 bitrate= 512.0kbits/s speed= 396x    
+video:0kB audio:14806kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 0.000514%
 Choose a specific audio stream (e.g., first one)
 
+
 audio = audio_streams.first()
+     
 
 
 # Download the audio file
 audio.download(filename='audio.mp4')
-
+     
+'/content/audio.mp4'
 English ASR with HuggingSound
 
+
 !pip install huggingsound -q
+     
 
 from huggingsound import SpeechRecognitionModel
+     
 
 import torch
 device = "cuda" if torch.cuda.is_available() else "cpu"
+     
 
 device
+     
+'cpu'
 
 model = SpeechRecognitionModel("jonatasgrosman/wav2vec2-large-xlsr-53-english", device = device)
-
+     
+INFO:huggingsound.speech_recognition.model:Loading model...
+config.json:   0%|          | 0.00/1.53k [00:00<?, ?B/s]
+model.safetensors:   0%|          | 0.00/1.26G [00:00<?, ?B/s]
+preprocessor_config.json:   0%|          | 0.00/262 [00:00<?, ?B/s]
+vocab.json:   0%|          | 0.00/300 [00:00<?, ?B/s]
+special_tokens_map.json:   0%|          | 0.00/85.0 [00:00<?, ?B/s]
 Audio Chunking
 
+
 import librosa
+     
 
 input_file = '/content/audio.wav'
+     
 
 print(librosa.get_samplerate(input_file))
 
@@ -54,40 +124,75 @@ stream = librosa.stream(
     frame_length=16000,
     hop_length=16000
 )
+     
+16000
 
 import soundfile as sf
+     
 
 for i,speech in enumerate(stream):
   sf.write(f'{i}.wav', speech, 16000)
+     
 
 i
-
+     
+7
 Audio Transcription / ASR / Speech to Text
+
 
 audio_path =[]
 for a in range(i+1):
   audio_path.append(f'/content/{a}.wav')
+     
 
 audio_path
+     
+['/content/0.wav',
+ '/content/1.wav',
+ '/content/2.wav',
+ '/content/3.wav',
+ '/content/4.wav',
+ '/content/5.wav',
+ '/content/6.wav',
+ '/content/7.wav']
 
 transcriptions = model.transcribe(audio_path)
+     
+100%|██████████| 8/8 [05:44<00:00, 43.05s/it]
 
 full_transcript = ' '
+     
 
 for item in transcriptions:
   full_transcript += ''.join(item['transcription'])
+     
 
 len(full_transcript)
-
+     
+2213
 Text Summarization
 
+
 from transformers import pipeline
+     
 
 summarization = pipeline('summarization')
+     
+No model was supplied, defaulted to sshleifer/distilbart-cnn-12-6 and revision a4f8f3e (https://huggingface.co/sshleifer/distilbart-cnn-12-6).
+Using a pipeline without specifying a model name and revision in production is not recommended.
+config.json:   0%|          | 0.00/1.80k [00:00<?, ?B/s]
+pytorch_model.bin:   0%|          | 0.00/1.22G [00:00<?, ?B/s]
+tokenizer_config.json:   0%|          | 0.00/26.0 [00:00<?, ?B/s]
+vocab.json:   0%|          | 0.00/899k [00:00<?, ?B/s]
+merges.txt:   0%|          | 0.00/456k [00:00<?, ?B/s]
 
 summarized_text = summarization(full_transcript)
+     
 
 summarized_text[0]['summary_text']
+     
+' Each communication channel has a capacity which can be defined as the amount of information that can be transmitted over the channel in a given-time unit . The bandwidth of transmission channel is a significant factor but it is not necessarily the only onetheat cost s involves in data transmission due to retendancy with the message itself . Network software arts headers and trailers to any messages for example to specify the destination or to check for errors in the entire messages all of these activities contribute the delay in transmitting data actually .'
 
 s=len(str(summarized_text))
 print(s)
+
